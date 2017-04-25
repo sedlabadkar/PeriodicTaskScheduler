@@ -19,6 +19,7 @@ using namespace std;
 #include "Task.h"
 
 #define NUM_THREADS 5
+
 namespace scheduling{
 template <class T, class E>
     class TaskScheduler {
@@ -70,7 +71,12 @@ template <class T, class E>
                 auto next_task_start_time = nextTask == task_list.end()? Task<T, E>::time_point::max() : (*nextTask).startTime;
 
                 if (this->task_updated.wait_until(lk, next_task_start_time) == std::cv_status::timeout) {
-                    nextTask->startTime += nextTask->repeatDuration;
+                    //Not a one time task
+                    if (nextTask->repeatDuration != chrono::seconds::zero()) {
+                        nextTask->startTime += nextTask->repeatDuration;
+                    } else {
+                        task_list.erase(nextTask);
+                    }
                     this->tasksExecQueue.push_back(*nextTask);
                     task_available_to_execute.notify_all(); //All threads are notified
                 }

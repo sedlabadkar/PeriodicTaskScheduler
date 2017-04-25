@@ -25,6 +25,29 @@ Periodic task scheduler is a simple task scheduler written in C++. It is capable
 
 ---
 
+## How is the code organized?
+
+* TaskScheduler.h is contains the TaskScheduler class. 
+    * TaskScheduler class implements a thread pool, it starts all the threads upon instantiation. 
+    * The threads wait on the `std::condition_variable task_available_to_execute` to execute tasks. 
+    * The main scheduler thread waits on `std::condition_variable task_updated` to schedule tasks to be executed. 
+    * The main scheduler thread wakes up when a new task is added, or when its time to execute one or more of the already added tasks. The task is then placed on a queue and the worker threads are woken up to execute the task. 
+    * Scheduler also maintains a task_list where all the tasks that are currently active are residing. Once a task has been placed on the execution queue, its start time in the task_list is updated. 
+    * A task with repeat interval of 0 seconds is only executed once.
+     
+* Task.h
+    * Task helper class for TaskScheduler.
+    * `startTime` holds the next time when this task needs to be executed. 
+    * `repeatDuration` is the repeat interval for the task
+    * Also takes care of updating the database with the results. Currently only supports adding data of type REAL as defined in the tables created   
+
+* db.h
+    * Basic API to interact with the SQLite database
+    * Provides simple method to execute basic query and fetch results. 
+    * The database contains two basic tables. The table _tasks_ contains all the tasks and the table task_data contains the output of tasks(only double values), the time at which the task was executed and, the maximum result so far. 
+     
+---
+
 
 * The included `main.cpp` might serve as an example. It provides a runtime terminal based menu to let user edit/remove tasks. By default, it adds two tasks to the scheduler and configures the scheduler to execute them every 30 and 60 seconds. These times can be changed at runtime by proving the taskID(1 or 2) and new time interval.
 

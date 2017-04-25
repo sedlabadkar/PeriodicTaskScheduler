@@ -27,8 +27,6 @@ public:
     typedef typename T::time_point time_point;
     typedef typename chrono::seconds duration;
 
-
-
     int taskID;//Task ID
     string taskName;//Optional
     function_type<E> func;
