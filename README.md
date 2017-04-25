@@ -9,10 +9,10 @@ Periodic task scheduler is a simple task scheduler written in C++. It is capable
 
 1. #include "TaskScheduler.h"
 2. Get taskScheduler object. The TaskScheduler class template signature is as follows:
-    *template <class T, class E>
-    *where,  
-        *class T = std::chrono::system_clock or any other clock type in std::chrono
-        *class E = Return type of tasks to be executed
+    * template <class T, class E>
+    * where,  
+        * class T = std::chrono::system_clock or any other clock type in std::chrono
+        * class E = Return type of tasks to be executed
 3. To add new task, call the addTask method with repeat interval and task function as input.
 4. To edit an existing task, call the edit task method with taskID and new interval as input. 
 5. To remove a task from active list, call the remove task method with taskID as input. 
